@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Pecas {
@@ -20,13 +23,18 @@ public class Pecas {
 	public Pecas() {
 		
 	}
+	
+	@ManyToOne
+	private Servico servico;
 
-	public Pecas(Long id, String nomePeca, String descricao, double precoUnitario) {
-		super();
+	
+
+	public Pecas(Long id, String nomePeca, String descricao, double precoUnitario, Servico servico) {
 		this.id = id;
 		this.nomePeca = nomePeca;
 		this.descricao = descricao;
 		this.precoUnitario = precoUnitario;
+		this.servico = servico;
 	}
 
 	public Long getId() {
@@ -60,6 +68,15 @@ public class Pecas {
 	public void setPrecoUnitario(double precoUnitario) {
 		this.precoUnitario = precoUnitario;
 	}
+
+	public Servico getServico() {
+		return servico;
+	}
+
+	public void setServico(Servico servico) {
+		this.servico = servico;
+	}
+	
 	
 	
 	

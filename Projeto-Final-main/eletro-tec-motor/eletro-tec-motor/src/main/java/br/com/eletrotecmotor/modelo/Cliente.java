@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 
@@ -36,24 +38,27 @@ public class Cliente {
 
 	}
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Servico servico;
 	
 
 
 	public Cliente(Long id, String nome, String cpf, String telefone, String email, String estado, String cidade,
-		String bairro, String rua, String cep, String complemento) {
-	this.id = id;
-	this.nome = nome;
-	this.cpf = cpf;
-	this.telefone = telefone;
-	this.email = email;
-	this.estado = estado;
-	this.cidade = cidade;
-	this.bairro = bairro;
-	this.rua = rua;
-	this.cep = cep;
-	this.complemento = complemento;
-}
-
+			String bairro, String rua, String cep, String complemento, Servico servico) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.telefone = telefone;
+		this.email = email;
+		this.estado = estado;
+		this.cidade = cidade;
+		this.bairro = bairro;
+		this.rua = rua;
+		this.cep = cep;
+		this.complemento = complemento;
+		this.servico = servico;
+	}
 
 	public Long getId() {
 		return id;
@@ -143,14 +148,16 @@ public class Cliente {
 		this.complemento = complemento;
 	}
 
+	public Servico getServico() {
+		return servico;
+	}
 
-
-
-	public Object converter(List<Cliente> findList) {
-		return null;
+	public void setServico(Servico servico) {
+		this.servico = servico;
 	}
 
 
+	
 
 
 

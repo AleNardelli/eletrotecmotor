@@ -2,12 +2,22 @@ package br.com.eletrotecmotor.modelo;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 public class Servico {
@@ -22,7 +32,7 @@ public class Servico {
 	private String descricaoServico;
 	private String dadosAdicionais;
 	private String dataEntrada;
-	private Date prazoConclusao;
+	private String prazoConclusao;
 	private double valorEstimado; //valor estimado é o valor total = peças + mão de obra
 	private String prioridade;
 	private String numeroOrdem;
@@ -31,9 +41,17 @@ public class Servico {
 		
 	}
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Cliente cliente;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "servico")
+	private List<Pecas> pecas = new ArrayList<Pecas>();
+	
+	
+	
 	public Servico(Long id, String nomeProduto, String marca, String descricaoObjeto, String descricaoServico,
-			String dadosAdicionais, String dataEntrada, Date prazoConclusao, double valorEstimado, String prioridade,
-			String numeroOrdem) {
+			String dadosAdicionais, String dataEntrada, String prazoConclusao, double valorEstimado, String prioridade,
+			String numeroOrdem, Cliente cliente, List<Pecas> pecas) {
 		super();
 		this.id = id;
 		this.nomeProduto = nomeProduto;
@@ -46,6 +64,8 @@ public class Servico {
 		this.valorEstimado = valorEstimado;
 		this.prioridade = prioridade;
 		this.numeroOrdem = numeroOrdem;
+		this.cliente = cliente;
+		this.pecas = pecas;
 	}
 
 	public Long getId() {
@@ -105,11 +125,11 @@ public class Servico {
 		this.dataEntrada = dataEntrada;
 	}
 
-	public Date getPrazoConclusao() {
+	public String getPrazoConclusao() {
 		return prazoConclusao;
 	}
 
-	public void setPrazoConclusao(Date prazoConclusao) {
+	public void setPrazoConclusao(String prazoConclusao) {
 		this.prazoConclusao = prazoConclusao;
 	}
 
@@ -136,6 +156,24 @@ public class Servico {
 	public void setNumeroOrdem(String numeroOrdem) {
 		this.numeroOrdem = numeroOrdem;
 	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	public List<Pecas> getPecas() {
+		return pecas;
+	}
+
+	public void setPecas(List<Pecas> pecas) {
+		this.pecas = pecas;
+	}
+
+	
 	
 	
 	
