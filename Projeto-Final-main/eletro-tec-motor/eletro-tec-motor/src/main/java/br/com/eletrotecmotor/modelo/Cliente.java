@@ -1,41 +1,59 @@
 package br.com.eletrotecmotor.modelo;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
 
 @Entity
 public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_cliente")
 	private Long id;
-	@Column(name = "nome")
 	private String nome;
-	@Column(name = "cpf")
+	@Column(unique = true)
 	private String cpf;
-	@Column(name = "telefone")
 	private String telefone;
-	@Column(name = "email")
 	private String email;
-	@Column(name = "estado")
 	private String estado;
-	@Column(name = "cidade")
 	private String cidade;
-	@Column(name = "bairro")
 	private String bairro;
-	@Column(name = "rua")
 	private String rua;
-	@Column(name = "cep")
 	private String cep;
-	@Column(name = "complemento")
 	private String complemento;
+	
+
 
 	public Cliente() {
 
 	}
+	
+	
+
+
+	public Cliente(Long id, String nome, String cpf, String telefone, String email, String estado, String cidade,
+		String bairro, String rua, String cep, String complemento) {
+	this.id = id;
+	this.nome = nome;
+	this.cpf = cpf;
+	this.telefone = telefone;
+	this.email = email;
+	this.estado = estado;
+	this.cidade = cidade;
+	this.bairro = bairro;
+	this.rua = rua;
+	this.cep = cep;
+	this.complemento = complemento;
+}
+
 
 	public Long getId() {
 		return id;
@@ -125,20 +143,16 @@ public class Cliente {
 		this.complemento = complemento;
 	}
 
-	public Cliente( String nome, String cpf, String telefone, String email, String estado, String cidade,
-			String bairro, String rua, String cep, String complemento) {
 
-		
-		this.nome = nome;
-		this.cpf = cpf;
-		this.telefone = telefone;
-		this.email = email;
-		this.estado = estado;
-		this.cidade = cidade;
-		this.bairro = bairro;
-		this.rua = rua;
-		this.cep = cep;
-		this.complemento = complemento;
+
+
+	public Object converter(List<Cliente> findList) {
+		return null;
 	}
+
+
+
+
+
 
 }

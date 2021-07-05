@@ -4,8 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.eletrotecmotor.modelo.Pecas;
 
-public interface PecasRepository extends JpaRepository<Pecas, Long> {
 
-	Pecas findBynome(String nome);
+public interface PecasRepository extends JpaRepository<Pecas,Long>{
 
 }

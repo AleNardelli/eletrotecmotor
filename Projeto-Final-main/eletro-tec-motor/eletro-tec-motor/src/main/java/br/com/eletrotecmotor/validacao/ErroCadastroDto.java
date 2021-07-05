@@ -1,4 +1,4 @@
-package br.com.eletrotecmotor.vadidacao;
+package br.com.eletrotecmotor.validacao;
 
 public class ErroCadastroDto {
 	

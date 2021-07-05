@@ -1,101 +1,73 @@
 package br.com.eletrotecmotor.controller;
 
-import java.net.URI;
-
-import java.util.Optional;
-
-import javax.transaction.Transactional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.RestController;
 
-import br.com.eletrotecmotor.Dto.ServicoDto;
-//import br.com.eletrotecmotor.form.AtualiazaoServicoForm;
-import br.com.eletrotecmotor.form.ServicoForm;
+import br.com.eletrotecmotor.modelo.Cliente;
 import br.com.eletrotecmotor.modelo.Servico;
 import br.com.eletrotecmotor.repository.ServicoRepository;
-import br.com.eletrotecmotor.vadidacao.DetalhesServicoDto;
+import io.swagger.annotations.ApiOperation;
 
+@RestController
+@RequestMapping("/servico")
 public class ServicoController {
-
-	@Controller
-	@RequestMapping("/servico")
-	public class servicoController {
-		@Autowired
-		private ServicoRepository servicoRepository;
 	
-		@GetMapping
-		public Page<ServicoDto> lista(@RequestParam(required = false) String nomeProduto,
-				@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 50) Pageable paginacao) {
+	@Autowired
+	private ServicoRepository servicoRepository;
+	
+	 @ApiOperation(value = "Post um serviço")
+	    @RequestMapping(value = "/servico", method =  RequestMethod.POST, produces="application/json", consumes="application/json")
+	    public Servico Post(@RequestBody Servico servico){
+	      return servicoRepository.save(servico);
+	    }
+	 
+	 @GetMapping ("/servicos")
+	 @ApiOperation(value="Método de Listagem Completa de Serviços")
+	 public List<Servico> listaServicos() {
+		 return servicoRepository.findAll();
+	 }
+	    
 
-			
-			if (nomeProduto == null) {
+	 @GetMapping("/{NomeProduto}")
+	 @ApiOperation(value="Busca de Serviço por Nome do Produto")
+	 public ResponseEntity<Servico> getWithFilternomeProduto(@RequestParam String nomeProduto)
+	 {
+    return new ResponseEntity<Servico>(servicoRepository.findByNomeProduto(nomeProduto), HttpStatus.OK);
+	 }
+	 
+	 @GetMapping("/{DataEntrada}")
+	 @ApiOperation(value="Busca de Serviço por Data de Entrada")
+	 public ResponseEntity<Servico> getWithFilterdataEntrada(@RequestParam String dataEntrada)
+	 {
+    return new ResponseEntity<Servico>(servicoRepository.findByDataEntrada(dataEntrada), HttpStatus.OK);
+	 }
+	 
+	 @GetMapping("/{Numero Ordem}")
+	 @ApiOperation(value="Busca de Serviço por Numero de Ordem")
+	 public ResponseEntity<Servico> getWithFilternumeroOrdem(@RequestParam String numeroOrdem)
+	 {
+    return new ResponseEntity<Servico>(servicoRepository.findByNumeroOrdem(numeroOrdem), HttpStatus.OK);
+	 }
+	 
+	 @PutMapping("/atualizar")
+	  public Servico atualizaServico(@RequestBody Servico servico) {
+		  return servicoRepository.save(servico);
+	  }
+	 
+	 @DeleteMapping
+	  public void deletarServico(@RequestBody Servico servico){
+		  servicoRepository.delete(servico);
+		  }
 
-				Page<Servico> servico = servicoRepository.findAll(paginacao);
-				return ServicoDto.converter(servico);
-			} else {
-				Page<Servico> servico = servicoRepository.findAll(paginacao);
-				return ServicoDto.converter(servico);
-			}
-
-		}
-
-		@PostMapping
-		@Transactional
-		public ResponseEntity<ServicoDto> cadastrar(@RequestBody ServicoForm form, UriComponentsBuilder uriBuilder) {
-			Servico servico = form.converter(servicoRepository);
-			servicoRepository.save(servico);
-			URI uri = uriBuilder.path("/servico/{id}").buildAndExpand(servico.getId()).toUri();
-			return ResponseEntity.created(uri).body(new ServicoDto(servico));
-		}
-
-		@GetMapping("/{id}")
-		public ResponseEntity<DetalhesServicoDto> detalhar(@PathVariable Long id) {
-
-			Optional<Servico> servico = servicoRepository.findById(id);
-			if (servico.isPresent()) {
-				return ResponseEntity.ok(new DetalhesServicoDto(servico.get()));
-			}
-			return ResponseEntity.notFound().build();
-		}
-	/*		@PutMapping("/{id}")
-			@Transactional
-			public ResponseEntity<ServicoDto> atualizar(@PathVariable Long id,
-					@RequestBody @Validated AtualiazaoServicoForm form) {
-				Optional<Servico> opcional = servicoRepository.findById(id);
-				if (opcional.isPresent()) {
-					Servico servico = form.atualizar(id, servicoRepository);
-					return ResponseEntity.ok(new ServicoDto(servico));
-				
-			} */
-			
-		
-		@DeleteMapping("/{id}")
-		@Transactional
-		public ResponseEntity<ServicoDto> remover(@PathVariable long id) {
-			Optional<Servico> optional = servicoRepository.findById(id);
-			if (optional.isPresent()) {
-				servicoRepository.deleteById(id);
-				return ResponseEntity.ok().build();
-			}
-			return ResponseEntity.notFound().build();
-	}
-}
 }

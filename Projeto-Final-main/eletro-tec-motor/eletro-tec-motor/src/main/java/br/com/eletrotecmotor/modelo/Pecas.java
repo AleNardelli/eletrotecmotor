@@ -2,8 +2,6 @@ package br.com.eletrotecmotor.modelo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,57 +11,58 @@ public class Pecas {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	@Column(name = "nome")
-	private String nome;
-	@Column(name = "descricao")
+	@Column(name = "id_pecas")
+	private Long id;
+	private String nomePeca;
 	private String descricao;
-	@Column(name = "status")
-	@Enumerated(EnumType.STRING)
-	private Status status = Status.Em_Espera;
+	private double precoUnitario;
 
 	public Pecas() {
-
+		
 	}
 
-	public long getId() {
+	public Pecas(Long id, String nomePeca, String descricao, double precoUnitario) {
+		super();
+		this.id = id;
+		this.nomePeca = nomePeca;
+		this.descricao = descricao;
+		this.precoUnitario = precoUnitario;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getNomePeca() {
+		return nomePeca;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNomePeca(String nomePeca) {
+		this.nomePeca = nomePeca;
 	}
 
 	public String getDescricao() {
 		return descricao;
 	}
 
-	public Pecas(long id, String nome, String descricao, Status status) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.descricao = descricao;
-		this.status = status;
-	}
-
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
-	public Status getStatus() {
-		return status;
+	public double getPrecoUnitario() {
+		return precoUnitario;
 	}
 
-	public void setStatus(Status status) {
-		this.status = status;
+	public void setPrecoUnitario(double precoUnitario) {
+		this.precoUnitario = precoUnitario;
 	}
+	
+	
+	
+	
 
-}
+}	
