@@ -18,46 +18,25 @@ public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_cliente")
 	private Long id;
 	private String nome;
 	@Column(unique = true)
 	private String cpf;
 	private String telefone;
 	private String email;
-	private String estado;
-	private String cidade;
-	private String bairro;
-	private String rua;
-	private String cep;
-	private String complemento;
-	
-
 
 	public Cliente() {
 
 	}
-	
-	@OneToOne(cascade = CascadeType.ALL)
-	private Servico servico;
-	
 
 
-	public Cliente(Long id, String nome, String cpf, String telefone, String email, String estado, String cidade,
-			String bairro, String rua, String cep, String complemento, Servico servico) {
+	public Cliente(String nome, String cpf, String telefone, String email) {
 		super();
-		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.telefone = telefone;
 		this.email = email;
-		this.estado = estado;
-		this.cidade = cidade;
-		this.bairro = bairro;
-		this.rua = rua;
-		this.cep = cep;
-		this.complemento = complemento;
-		this.servico = servico;
+
 	}
 
 	public Long getId() {
@@ -99,66 +78,6 @@ public class Cliente {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-
-	public String getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-
-	public String getRua() {
-		return rua;
-	}
-
-	public void setRua(String rua) {
-		this.rua = rua;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
-
-	public String getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
-	}
-
-	public Servico getServico() {
-		return servico;
-	}
-
-	public void setServico(Servico servico) {
-		this.servico = servico;
-	}
-
-
-	
-
 
 
 

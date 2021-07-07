@@ -1,5 +1,6 @@
 package br.com.eletrotecmotor.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,15 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.eletrotecmotor.modelo.Cliente;
+import br.com.eletrotecmotor.dto.ServicoDto;
+import br.com.eletrotecmotor.form.ServicoForm;
 import br.com.eletrotecmotor.modelo.Servico;
+import br.com.eletrotecmotor.repository.ClienteRepository;
+import br.com.eletrotecmotor.repository.PecasRepository;
 import br.com.eletrotecmotor.repository.ServicoRepository;
 import io.swagger.annotations.ApiOperation;
 
@@ -24,50 +30,56 @@ import io.swagger.annotations.ApiOperation;
 public class ServicoController {
 	
 	@Autowired
-	private ServicoRepository servicoRepository;
+	private ServicoRepository SR;
+	
+	@Autowired
+	private ClienteRepository CR;
+	
+	@Autowired
+	private PecasRepository PR;
 	
 	 @ApiOperation(value = "Post um serviço")
-	    @RequestMapping(value = "/servico", method =  RequestMethod.POST, produces="application/json", consumes="application/json")
-	    public Servico Post(@RequestBody Servico servico){
-	      return servicoRepository.save(servico);
+	    @RequestMapping(value = "/servico", method =  RequestMethod.POST)
+	    public Servico Post(@RequestBody ServicoForm servicoForm){
+		 Servico servico = servicoForm.converter(CR, SR, PR);
+		 return servico;
 	    }
 	 
 	 @GetMapping ("/servicos")
 	 @ApiOperation(value="Método de Listagem Completa de Serviços")
 	 public List<Servico> listaServicos() {
-		 return servicoRepository.findAll();
+		 return SR.findAll();
 	 }
 	    
-
-	 @GetMapping("/{NomeProduto}")
-	 @ApiOperation(value="Busca de Serviço por Nome do Produto")
-	 public ResponseEntity<Servico> getWithFilternomeProduto(@RequestParam String nomeProduto)
-	 {
-    return new ResponseEntity<Servico>(servicoRepository.findByNomeProduto(nomeProduto), HttpStatus.OK);
-	 }
 	 
 	 @GetMapping("/{DataEntrada}")
 	 @ApiOperation(value="Busca de Serviço por Data de Entrada")
 	 public ResponseEntity<Servico> getWithFilterdataEntrada(@RequestParam String dataEntrada)
 	 {
-    return new ResponseEntity<Servico>(servicoRepository.findByDataEntrada(dataEntrada), HttpStatus.OK);
+    return new ResponseEntity<Servico>(SR.findByDataEntrada(dataEntrada), HttpStatus.OK);
 	 }
 	 
-	 @GetMapping("/{Numero Ordem}")
-	 @ApiOperation(value="Busca de Serviço por Numero de Ordem")
-	 public ResponseEntity<Servico> getWithFilternumeroOrdem(@RequestParam String numeroOrdem)
-	 {
-    return new ResponseEntity<Servico>(servicoRepository.findByNumeroOrdem(numeroOrdem), HttpStatus.OK);
-	 }
 	 
 	 @PutMapping("/atualizar")
 	  public Servico atualizaServico(@RequestBody Servico servico) {
-		  return servicoRepository.save(servico);
+		  return SR.save(servico);
 	  }
 	 
 	 @DeleteMapping
 	  public void deletarServico(@RequestBody Servico servico){
-		  servicoRepository.delete(servico);
+		  SR.delete(servico);
 		  }
+	 
+	 //Método post com soma de peças
+	 @PostMapping
+	 @ApiOperation(value="Cadastro de serviço com soma do valor das peças")
+	 public ResponseEntity<?> CadastrarServico(@RequestBody ServicoForm servicoForm, UriComponentsBuilder uri)
+	    {
+	            Servico servico = servicoForm.converter(CR, SR, PR);
+	            URI u = uri.path("/pedido/").buildAndExpand(servico.getId()).toUri();
+	            return ResponseEntity.created(u).body(new ServicoDto().conversao(servico));
+
+
+	    }
 
 }

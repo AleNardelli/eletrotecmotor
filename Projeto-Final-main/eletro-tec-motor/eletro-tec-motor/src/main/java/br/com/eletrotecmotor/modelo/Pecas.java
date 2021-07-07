@@ -14,7 +14,6 @@ public class Pecas {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_pecas")
 	private Long id;
 	private String nomePeca;
 	private String descricao;
@@ -23,18 +22,13 @@ public class Pecas {
 	public Pecas() {
 		
 	}
-	
-	@ManyToOne
-	private Servico servico;
 
 	
 
-	public Pecas(Long id, String nomePeca, String descricao, double precoUnitario, Servico servico) {
-		this.id = id;
+	public Pecas(String nomePeca, String descricao, double precoUnitario) {
 		this.nomePeca = nomePeca;
 		this.descricao = descricao;
 		this.precoUnitario = precoUnitario;
-		this.servico = servico;
 	}
 
 	public Long getId() {
@@ -69,16 +63,7 @@ public class Pecas {
 		this.precoUnitario = precoUnitario;
 	}
 
-	public Servico getServico() {
-		return servico;
-	}
 
-	public void setServico(Servico servico) {
-		this.servico = servico;
-	}
-	
-	
-	
 	
 	
 
