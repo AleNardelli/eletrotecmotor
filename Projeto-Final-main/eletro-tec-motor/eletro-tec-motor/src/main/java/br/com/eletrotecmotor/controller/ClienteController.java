@@ -26,6 +26,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import br.com.eletrotecmotor.dto.ClienteDto;
+import br.com.eletrotecmotor.form.ClienteForm;
 import br.com.eletrotecmotor.modelo.Cliente;
 import br.com.eletrotecmotor.repository.ClienteRepository;
 import io.swagger.annotations.ApiOperation;
@@ -40,12 +42,23 @@ public class ClienteController {
 	private ClienteRepository clienteRepository;
 	
 	
-	 @ApiOperation(value = "Post um cliente")
-	    @RequestMapping(value = "/cliente", method =  RequestMethod.POST, produces="application/json", consumes="application/json")
-	    public Cliente Post(@RequestBody Cliente cliente){
-	      return clienteRepository.save(cliente);
-	    }
-	 
+//	 @ApiOperation(value = "Post um cliente")
+//	    @RequestMapping(value = "/cliente", method =  RequestMethod.POST, produces="application/json", consumes="application/json")
+//	    public Cliente Post(@RequestBody Cliente cliente){
+//	      return clienteRepository.save(cliente);
+//	    }
+	
+	
+    @PostMapping
+    @ApiOperation(value = "Post um cliente")
+    @Transactional
+    public ResponseEntity<ClienteDto> cadastrar(@RequestBody @Valid ClienteForm form, UriComponentsBuilder uriBuilder) {
+    	Cliente cliente = form.converter();
+    	clienteRepository.save(cliente);
+    	URI uri = uriBuilder.path("cliente/{id}").buildAndExpand(cliente.getId()).toUri();
+    	return ResponseEntity.created(uri).body(new ClienteDto(cliente));
+    }
+    
 	 @GetMapping ("/clientes")
 	 @ApiOperation(value="Método de Listagem Completa de Clientes")
 	 public List<Cliente> listaClientes() {
@@ -53,12 +66,21 @@ public class ClienteController {
 	 }
 	    
 
-  @GetMapping("/{Nome}")
-  @ApiOperation(value="Busca de Cliente por Nome")
-  public ResponseEntity<Cliente> getWithFilternome(@RequestParam String nome)
-  {
-      return new ResponseEntity<Cliente>(clienteRepository.findByNome(nome), HttpStatus.OK);
-  }
+//  @GetMapping("/{Nome}")
+//  @ApiOperation(value="Busca de Cliente por Nome")
+//  public ResponseEntity<Cliente> getWithFilternome(@RequestParam String nome)
+//  {
+//      return new ResponseEntity<Cliente>(clienteRepository.findByNome(nome), HttpStatus.OK);
+//  }
+	 
+	 @GetMapping("/{nome}")
+	 @ApiOperation(value="Busca de Cliente por Nome")
+	 public ResponseEntity<Cliente> getWithFilternome(@RequestParam String nome)
+	 {
+		 if (nome == null)
+			 return ResponseEntity.notFound().build();
+		return new ResponseEntity<Cliente>(clienteRepository.findByNome(nome), HttpStatus.OK);
+	 }
   
   @GetMapping("/{Cpf}")
   @ApiOperation(value="Busca de Cliente por Cpf")
@@ -72,13 +94,19 @@ public class ClienteController {
 	  return clienteRepository.save(cliente);
   }
   
-  @DeleteMapping
-  public void deletarCliente(@RequestBody Cliente cliente){
-	  clienteRepository.delete(cliente);
-	  }
+  @DeleteMapping("/{id}")
+  @ApiOperation(value="Deleta Clientes")
+  public ResponseEntity<?> remover(@PathVariable Long id) {
+      Optional<Cliente> optional = clienteRepository.findById(id);
+      if (optional.isPresent()) {
+          clienteRepository.deleteById(id);
+          return ResponseEntity.ok().build();
+      }
+      return ResponseEntity.notFound().build();
+  }
 
-  
-} 
+}
+
 
 /* public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente cliente){
 Cliente updateCliente = clienteService.updateCliente(cliente);

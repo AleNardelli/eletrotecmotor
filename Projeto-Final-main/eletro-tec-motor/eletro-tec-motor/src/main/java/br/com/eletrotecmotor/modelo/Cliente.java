@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
 
 @Entity
@@ -20,8 +24,8 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	@Column(unique = true)
 	private String cpf;
+	private String cnpj;
 	private String telefone;
 	private String email;
 
@@ -30,10 +34,11 @@ public class Cliente {
 	}
 
 
-	public Cliente(String nome, String cpf, String telefone, String email) {
+	public Cliente(String nome, String cpf, String cnpj, String telefone, String email) {
 		super();
 		this.nome = nome;
 		this.cpf = cpf;
+		this.cnpj = cnpj;
 		this.telefone = telefone;
 		this.email = email;
 
@@ -62,6 +67,16 @@ public class Cliente {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+	
+	public String getCnpj() {
+		return cnpj;
+	}
+
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
 
 	public String getTelefone() {
 		return telefone;

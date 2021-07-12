@@ -6,5 +6,7 @@ import br.com.eletrotecmotor.modelo.Pecas;
 
 
 public interface PecasRepository extends JpaRepository<Pecas,Long>{
+	
+	
 
 }

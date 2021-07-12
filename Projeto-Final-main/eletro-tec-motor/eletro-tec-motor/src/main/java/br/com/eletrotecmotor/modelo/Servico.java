@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
 
 
 @Entity
@@ -26,31 +28,37 @@ public class Servico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;                 //gerado automaticamente
 	private String descricaoServico;
-	private LocalDateTime dataEntrada;  //gerado automaticamente
+	private LocalDate dataEntrada = LocalDate.now();  //gerado automaticamente
 	private LocalDate prazoConclusao;
 	private double total;  //valor mão de obra + peças //gerado automaticamente
+	@Enumerated
+	private Status status = Status.Aberto;
 	@ManyToOne
 	private Cliente cliente;
 	@ManyToMany
 	private List<Pecas> pecas;
-
 	
-	//construtor necessário pra soma de Peças
+
+	//constutor necessário para a soma 
 	
 	
 	public Servico() {
 		
 	}
 	
-	public Servico(String descricaoServico, LocalDateTime dataEntrada,
-			LocalDate prazoConclusao, double total, Cliente cliente, List<Pecas> pecas) {
+
+	public Servico(String descricaoServico, LocalDate dataEntrada, LocalDate prazoConclusao, double total, Status status,
+			Cliente cliente, List<Pecas> pecas) {
 		this.descricaoServico = descricaoServico;
 		this.dataEntrada = dataEntrada;
 		this.prazoConclusao = prazoConclusao;
 		this.total = total;
+		this.status = status;
 		this.cliente = cliente;
 		this.pecas = pecas;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -74,14 +82,13 @@ public class Servico {
 	}
 
 
-
-	public LocalDateTime getDataEntrada() {
+	public LocalDate getDataEntrada() {
 		return dataEntrada;
 	}
 
 
 
-	public void setDataEntrada(LocalDateTime dataEntrada) {
+	public void setDataEntrada(LocalDate dataEntrada) {
 		this.dataEntrada = dataEntrada;
 	}
 
@@ -93,8 +100,20 @@ public class Servico {
 
 
 
-	public void setPrazoConclusao(LocalDate prazoConclusao) {
+	public void setPrazoConlusao(LocalDate prazoConclusao) {
 		this.prazoConclusao = prazoConclusao;
+	}
+
+
+
+	public Status getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 
@@ -133,6 +152,13 @@ public class Servico {
 		this.pecas = pecas;
 	}
 	
+	public Boolean getEmAtraso() { 		
+		LocalDate hoje = LocalDate.now(); 		
+		if (hoje.isBefore(prazoConclusao)) { 			
+			return true; 		
+			} 		
+		return false; 	
+		}
 	
 
 }
